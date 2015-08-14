@@ -36,7 +36,7 @@ cp -rfv build/src/* sdk/sdk/java/src/
 
 #copy OpenCV libraries
 rm -rf sdk/sdk/native/libs/*
-cp -rfv build/lib/*/libopencv_java3.so sdk/sdk/native/libs/
+cp -rfv build/lib/*/libopencv_java3.so sdk/sdk/native/libs/armeabi-v7a/
 
 #copy OpenCV headers
 rm -rf sdk/sdk/native/jni/include/* 
