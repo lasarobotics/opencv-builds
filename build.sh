@@ -11,8 +11,8 @@ export ANDROID_SDK=~/Android/Sdk
 rm -rf build
 mkdir build
 cd build
-#-DBUILD_FAT_JAVA_LIB=ON -DBUILD_ANDROID_SERVICE=ON -DINSTALL_ANDROID_EXAMPLES=ON -DINSTALL_CREATE_DISTRIB=ON 
-cmake -Wno-dev -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DANDROID=ON -DBUILD_SHARED_LIBS=ON -DBUILD_ANDROID_EXAMPLES=OFF -DANDROID_NATIVE_API_LEVEL=16 -DOPENCV_EXTRA_MODULES_PATH=../opencv-contrib/modules -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON -DCMAKE_TOOLCHAIN_FILE=../opencv/platforms/android/android.toolchain.cmake ../opencv
+# -DBUILD_ANDROID_SERVICE=ON -DINSTALL_ANDROID_EXAMPLES=ON -DINSTALL_CREATE_DISTRIB=ON -DBUILD_SHARED_LIBS=ON
+cmake -Wno-dev -DBUILD_TESTS=OFF -DBUILD_FAT_JAVA_LIB=ON -DBUILD_PERF_TESTS=OFF -DANDROID=ON  -DBUILD_ANDROID_EXAMPLES=OFF -DANDROID_NATIVE_API_LEVEL=16 -DOPENCV_EXTRA_MODULES_PATH=../opencv-contrib/modules -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON -DCMAKE_TOOLCHAIN_FILE=../opencv/platforms/android/android.toolchain.cmake ../opencv
 #cmake -Wno-dev -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DOPENCV_EXTRA_MODULES_PATH=../opencv-contrib/modules -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON -DCMAKE_TOOLCHAIN_FILE=../opencv/platforms/android/android.toolchain.cmake ../opencv
 
 #make!!
@@ -36,7 +36,7 @@ cp -rfv build/src/* sdk/sdk/java/src/
 
 #copy OpenCV libraries
 rm -rf sdk/sdk/native/libs/*
-cp -rfv build/lib/* sdk/sdk/native/libs/
+cp -rfv build/lib/*/libopencv_java3.so sdk/sdk/native/libs/
 
 #copy OpenCV headers
 rm -rf sdk/sdk/native/jni/include/* 
