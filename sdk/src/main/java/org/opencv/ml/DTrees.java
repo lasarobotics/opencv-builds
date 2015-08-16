@@ -21,6 +21,48 @@ public class DTrees extends StatModel {
 
 
     //
+    // C++:  Mat getPriors()
+    //
+
+    //javadoc: DTrees::getPriors()
+    public  Mat getPriors()
+    {
+        
+        Mat retVal = new Mat(getPriors_0(nativeObj));
+        
+        return retVal;
+    }
+
+
+    //
+    // C++:  void setPriors(Mat val)
+    //
+
+    //javadoc: DTrees::setPriors(val)
+    public  void setPriors(Mat val)
+    {
+        
+        setPriors_0(nativeObj, val.nativeObj);
+        
+        return;
+    }
+
+
+    //
+    // C++: static Ptr_DTrees create()
+    //
+
+    //javadoc: DTrees::create()
+    public static DTrees create()
+    {
+        
+        DTrees retVal = new DTrees(create_0());
+        
+        return retVal;
+    }
+
+
+    //
     // C++:  int getMaxCategories()
     //
 
@@ -244,54 +286,21 @@ public class DTrees extends StatModel {
     }
 
 
-    //
-    // C++:  Mat getPriors()
-    //
-
-    //javadoc: DTrees::getPriors()
-    public  Mat getPriors()
-    {
-        
-        Mat retVal = new Mat(getPriors_0(nativeObj));
-        
-        return retVal;
-    }
-
-
-    //
-    // C++:  void setPriors(Mat val)
-    //
-
-    //javadoc: DTrees::setPriors(val)
-    public  void setPriors(Mat val)
-    {
-        
-        setPriors_0(nativeObj, val.nativeObj);
-        
-        return;
-    }
-
-
-    //
-    // C++: static Ptr_DTrees create()
-    //
-
-    //javadoc: DTrees::create()
-    public static DTrees create()
-    {
-        
-        DTrees retVal = new DTrees(create_0());
-        
-        return retVal;
-    }
-
-
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
 
 
+
+    // C++:  Mat getPriors()
+    private static native long getPriors_0(long nativeObj);
+
+    // C++:  void setPriors(Mat val)
+    private static native void setPriors_0(long nativeObj, long val_nativeObj);
+
+    // C++: static Ptr_DTrees create()
+    private static native long create_0();
 
     // C++:  int getMaxCategories()
     private static native int getMaxCategories_0(long nativeObj);
@@ -340,15 +349,6 @@ public class DTrees extends StatModel {
 
     // C++:  void setRegressionAccuracy(float val)
     private static native void setRegressionAccuracy_0(long nativeObj, float val);
-
-    // C++:  Mat getPriors()
-    private static native long getPriors_0(long nativeObj);
-
-    // C++:  void setPriors(Mat val)
-    private static native void setPriors_0(long nativeObj, long val_nativeObj);
-
-    // C++: static Ptr_DTrees create()
-    private static native long create_0();
 
     // native support for java finalize()
     private static native void delete(long nativeObj);

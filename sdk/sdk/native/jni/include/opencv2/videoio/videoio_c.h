@@ -63,9 +63,6 @@ typedef struct CvCapture CvCapture;
 /* start capturing frames from video file */
 CVAPI(CvCapture*) cvCreateFileCapture( const char* filename );
 
-/* start capturing frames from video file. allows specifying a preferred API to use */
-CVAPI(CvCapture*) cvCreateFileCaptureWithPreference( const char* filename , int apiPreference);
-
 enum
 {
     CV_CAP_ANY      =0,     // autodetect
@@ -114,10 +111,8 @@ enum
     CV_CAP_INTELPERC = 1500, // Intel Perceptual Computing
 
     CV_CAP_OPENNI2 = 1600,   // OpenNI2 (for Kinect)
-    CV_CAP_GPHOTO2 = 1700,
-    CV_CAP_GSTREAMER = 1800, // GStreamer
-    CV_CAP_FFMPEG = 1900,    // FFMPEG
-    CV_CAP_IMAGES = 2000     // OpenCV Image Sequence (e.g. img_%02d.jpg)
+
+    CV_CAP_GPHOTO2 = 1700
 };
 
 /* start capturing frames from camera: index = camera_index + domain_offset (CV_CAP_*) */

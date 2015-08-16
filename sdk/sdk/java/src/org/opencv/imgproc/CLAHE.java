@@ -30,20 +30,6 @@ public class CLAHE extends Algorithm {
 
 
     //
-    // C++:  double getClipLimit()
-    //
-
-    //javadoc: CLAHE::getClipLimit()
-    public  double getClipLimit()
-    {
-        
-        double retVal = getClipLimit_0(nativeObj);
-        
-        return retVal;
-    }
-
-
-    //
     // C++:  void setClipLimit(double clipLimit)
     //
 
@@ -54,6 +40,20 @@ public class CLAHE extends Algorithm {
         setClipLimit_0(nativeObj, clipLimit);
         
         return;
+    }
+
+
+    //
+    // C++:  double getClipLimit()
+    //
+
+    //javadoc: CLAHE::getClipLimit()
+    public  double getClipLimit()
+    {
+        
+        double retVal = getClipLimit_0(nativeObj);
+        
+        return retVal;
     }
 
 
@@ -109,11 +109,11 @@ public class CLAHE extends Algorithm {
     // C++:  void apply(Mat src, Mat& dst)
     private static native void apply_0(long nativeObj, long src_nativeObj, long dst_nativeObj);
 
-    // C++:  double getClipLimit()
-    private static native double getClipLimit_0(long nativeObj);
-
     // C++:  void setClipLimit(double clipLimit)
     private static native void setClipLimit_0(long nativeObj, double clipLimit);
+
+    // C++:  double getClipLimit()
+    private static native double getClipLimit_0(long nativeObj);
 
     // C++:  void setTilesGridSize(Size tileGridSize)
     private static native void setTilesGridSize_0(long nativeObj, double tileGridSize_width, double tileGridSize_height);

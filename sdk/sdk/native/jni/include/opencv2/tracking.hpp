@@ -306,7 +306,6 @@ The first argument is the name of the tracker and the second is a video source.
 
 */
 
-#include <opencv2/tracking/tracker.hpp>
-#include <opencv2/tracking/tldDataset.hpp>
+#include "opencv2/tracking/tracker.hpp"
 
 #endif //__OPENCV_TRACKING_LENLEN
