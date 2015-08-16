@@ -1,6 +1,6 @@
 #include <DetectionBasedTracker_jni.h>
 #include <opencv2/core/core.hpp>
-#include <opencv2/objdetect.hpp>
+#include <opencv2/contrib/detection_based_tracker.hpp>
 
 #include <string>
 #include <vector>
@@ -18,53 +18,6 @@ inline void vector_Rect_to_Mat(vector<Rect>& v_rect, Mat& mat)
     mat = Mat(v_rect, true);
 }
 
-class CascadeDetectorAdapter: public DetectionBasedTracker::IDetector
-{
-public:
-    CascadeDetectorAdapter(cv::Ptr<cv::CascadeClassifier> detector):
-            IDetector(),
-            Detector(detector)
-    {
-        LOGD("CascadeDetectorAdapter::Detect::Detect");
-        CV_Assert(detector);
-    }
-
-    void detect(const cv::Mat &Image, std::vector<cv::Rect> &objects)
-    {
-        LOGD("CascadeDetectorAdapter::Detect: begin");
-        LOGD("CascadeDetectorAdapter::Detect: scaleFactor=%.2f, minNeighbours=%d, minObjSize=(%dx%d), maxObjSize=(%dx%d)", scaleFactor, minNeighbours, minObjSize.width, minObjSize.height, maxObjSize.width, maxObjSize.height);
-        Detector->detectMultiScale(Image, objects, scaleFactor, minNeighbours, 0, minObjSize, maxObjSize);
-        LOGD("CascadeDetectorAdapter::Detect: end");
-    }
-
-    virtual ~CascadeDetectorAdapter()
-    {
-        LOGD("CascadeDetectorAdapter::Detect::~Detect");
-    }
-
-private:
-    CascadeDetectorAdapter();
-    cv::Ptr<cv::CascadeClassifier> Detector;
-};
-
-struct DetectorAgregator
-{
-    cv::Ptr<CascadeDetectorAdapter> mainDetector;
-    cv::Ptr<CascadeDetectorAdapter> trackingDetector;
-
-    cv::Ptr<DetectionBasedTracker> tracker;
-    DetectorAgregator(cv::Ptr<CascadeDetectorAdapter>& _mainDetector, cv::Ptr<CascadeDetectorAdapter>& _trackingDetector):
-            mainDetector(_mainDetector),
-            trackingDetector(_trackingDetector)
-    {
-        CV_Assert(_mainDetector);
-        CV_Assert(_trackingDetector);
-
-        DetectionBasedTracker::Parameters DetectorParams;
-        tracker = makePtr<DetectionBasedTracker>(mainDetector, trackingDetector, DetectorParams);
-    }
-};
-
 JNIEXPORT jlong JNICALL Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeCreateObject
 (JNIEnv * jenv, jclass, jstring jFileName, jint faceSize)
 {
@@ -73,20 +26,12 @@ JNIEXPORT jlong JNICALL Java_org_opencv_samples_facedetect_DetectionBasedTracker
     string stdFileName(jnamestr);
     jlong result = 0;
 
-    LOGD("Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeCreateObject");
-
     try
     {
-        cv::Ptr<CascadeDetectorAdapter> mainDetector = makePtr<CascadeDetectorAdapter>(
-            makePtr<CascadeClassifier>(stdFileName));
-        cv::Ptr<CascadeDetectorAdapter> trackingDetector = makePtr<CascadeDetectorAdapter>(
-            makePtr<CascadeClassifier>(stdFileName));
-        result = (jlong)new DetectorAgregator(mainDetector, trackingDetector);
+        DetectionBasedTracker::Parameters DetectorParams;
         if (faceSize > 0)
-        {
-            mainDetector->setMinObjectSize(Size(faceSize, faceSize));
-            //trackingDetector->setMinObjectSize(Size(faceSize, faceSize));
-        }
+            DetectorParams.minObjectSize = faceSize;
+        result = (jlong)new DetectionBasedTracker(stdFileName, DetectorParams);
     }
     catch(cv::Exception& e)
     {
@@ -96,8 +41,8 @@ JNIEXPORT jlong JNICALL Java_org_opencv_samples_facedetect_DetectionBasedTracker
             je = jenv->FindClass("java/lang/Exception");
         jenv->ThrowNew(je, e.what());
     }
-        catch (...)
-        {
+    catch (...)
+    {
         LOGD("nativeCreateObject caught unknown exception");
         jclass je = jenv->FindClass("java/lang/Exception");
         jenv->ThrowNew(je, "Unknown exception in JNI code of DetectionBasedTracker.nativeCreateObject()");
@@ -111,14 +56,13 @@ JNIEXPORT jlong JNICALL Java_org_opencv_samples_facedetect_DetectionBasedTracker
 JNIEXPORT void JNICALL Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeDestroyObject
 (JNIEnv * jenv, jclass, jlong thiz)
 {
-    LOGD("Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeDestroyObject");
-
+    LOGD("Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeDestroyObject enter");
     try
     {
         if(thiz != 0)
         {
-            ((DetectorAgregator*)thiz)->tracker->stop();
-            delete (DetectorAgregator*)thiz;
+            ((DetectionBasedTracker*)thiz)->stop();
+            delete (DetectionBasedTracker*)thiz;
         }
     }
     catch(cv::Exception& e)
@@ -141,11 +85,10 @@ JNIEXPORT void JNICALL Java_org_opencv_samples_facedetect_DetectionBasedTracker_
 JNIEXPORT void JNICALL Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeStart
 (JNIEnv * jenv, jclass, jlong thiz)
 {
-    LOGD("Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeStart");
-
+    LOGD("Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeStart enter");
     try
     {
-        ((DetectorAgregator*)thiz)->tracker->run();
+        ((DetectionBasedTracker*)thiz)->run();
     }
     catch(cv::Exception& e)
     {
@@ -167,11 +110,10 @@ JNIEXPORT void JNICALL Java_org_opencv_samples_facedetect_DetectionBasedTracker_
 JNIEXPORT void JNICALL Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeStop
 (JNIEnv * jenv, jclass, jlong thiz)
 {
-    LOGD("Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeStop");
-
+    LOGD("Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeStop enter");
     try
     {
-        ((DetectorAgregator*)thiz)->tracker->stop();
+        ((DetectionBasedTracker*)thiz)->stop();
     }
     catch(cv::Exception& e)
     {
@@ -193,14 +135,15 @@ JNIEXPORT void JNICALL Java_org_opencv_samples_facedetect_DetectionBasedTracker_
 JNIEXPORT void JNICALL Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeSetFaceSize
 (JNIEnv * jenv, jclass, jlong thiz, jint faceSize)
 {
-    LOGD("Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeSetFaceSize -- BEGIN");
-
+    LOGD("Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeSetFaceSize enter");
     try
     {
         if (faceSize > 0)
         {
-            ((DetectorAgregator*)thiz)->mainDetector->setMinObjectSize(Size(faceSize, faceSize));
-            //((DetectorAgregator*)thiz)->trackingDetector->setMinObjectSize(Size(faceSize, faceSize));
+            DetectionBasedTracker::Parameters DetectorParams = \
+            ((DetectionBasedTracker*)thiz)->getParameters();
+            DetectorParams.minObjectSize = faceSize;
+            ((DetectionBasedTracker*)thiz)->setParameters(DetectorParams);
         }
     }
     catch(cv::Exception& e)
@@ -217,21 +160,20 @@ JNIEXPORT void JNICALL Java_org_opencv_samples_facedetect_DetectionBasedTracker_
         jclass je = jenv->FindClass("java/lang/Exception");
         jenv->ThrowNew(je, "Unknown exception in JNI code of DetectionBasedTracker.nativeSetFaceSize()");
     }
-    LOGD("Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeSetFaceSize -- END");
+    LOGD("Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeSetFaceSize exit");
 }
 
 
 JNIEXPORT void JNICALL Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeDetect
 (JNIEnv * jenv, jclass, jlong thiz, jlong imageGray, jlong faces)
 {
-    LOGD("Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeDetect");
-
+    LOGD("Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeDetect enter");
     try
     {
         vector<Rect> RectFaces;
-        ((DetectorAgregator*)thiz)->tracker->process(*((Mat*)imageGray));
-        ((DetectorAgregator*)thiz)->tracker->getObjects(RectFaces);
-        *((Mat*)faces) = Mat(RectFaces, true);
+        ((DetectionBasedTracker*)thiz)->process(*((Mat*)imageGray));
+        ((DetectionBasedTracker*)thiz)->getObjects(RectFaces);
+        vector_Rect_to_Mat(RectFaces, *((Mat*)faces));
     }
     catch(cv::Exception& e)
     {
@@ -247,5 +189,5 @@ JNIEXPORT void JNICALL Java_org_opencv_samples_facedetect_DetectionBasedTracker_
         jclass je = jenv->FindClass("java/lang/Exception");
         jenv->ThrowNew(je, "Unknown exception in JNI code DetectionBasedTracker.nativeDetect()");
     }
-    LOGD("Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeDetect END");
+    LOGD("Java_org_opencv_samples_facedetect_DetectionBasedTracker_nativeDetect exit");
 }
