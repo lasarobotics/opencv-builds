@@ -34,11 +34,6 @@ rm -rfv sdk/sdk/java/src/*
 cp -rfv build/src/* sdk/sdk/java/src/
 #TODO we're not copying the manifests, javadocs, or manifests yet
 
-#copy OpenCV libraries
-rm -rf sdk/sdk/native/libs/*
-mkdir sdk/sdk/native/libs/armeabi-v7a/
-cp -rfv build/lib/armeabi-v7a/libopencv_java3.so sdk/sdk/native/libs/armeabi-v7a/
-
 #copy OpenCV headers
 rm -rf sdk/sdk/native/jni/include/* 
 #TODO we're not copying the makefiles yet though
@@ -49,6 +44,12 @@ cp -rfv */include/ ../../sdk/sdk/native/jni/
 cd ../../opencv-contrib/modules
 cp -rfv */include/ ../../sdk/sdk/native/jni/
 cd ../../
+
+#copy OpenCV libraries
+rm -rf sdk/sdk/native/libs/*
+mkdir sdk/sdk/native/libs/armeabi-v7a/
+cp -rfv build/lib/armeabi-v7a/libopencv_java.so sdk/sdk/native/libs/armeabi-v7a/
+cp -rfv build/lib/armeabi-v7a/libopencv_info.so sdk/sdk/native/libs/armeabi-v7a/
 
 #TODO build with Gradle, by yourself :)
 #TODO we can't do much with the etc/ folder

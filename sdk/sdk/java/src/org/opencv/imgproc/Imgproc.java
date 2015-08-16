@@ -3542,8 +3542,8 @@ public class Imgproc {
  * neighborhood <em>S(p)</em>. It calculates the covariation matrix of
  * derivatives over the neighborhood as:</p>
  *
- * <p><em>M = sum(by: S(p))(dI/dx)^2 sum(by: S(p))(dI/dx dI/dy)^2
- * sum(by: S(p))(dI/dx dI/dy)^2 sum(by: S(p))(dI/dy)^2 </em></p>
+ * <p><em>M = sum(by: S(p))(dI/dx)^2 sum(by: S(p))(dI/dx dI/dy)
+ * sum(by: S(p))(dI/dx dI/dy) sum(by: S(p))(dI/dy)^2 </em></p>
  *
  * <p>where the derivatives are computed using the "Sobel" operator.</p>
  *
@@ -3595,8 +3595,8 @@ public class Imgproc {
  * neighborhood <em>S(p)</em>. It calculates the covariation matrix of
  * derivatives over the neighborhood as:</p>
  *
- * <p><em>M = sum(by: S(p))(dI/dx)^2 sum(by: S(p))(dI/dx dI/dy)^2
- * sum(by: S(p))(dI/dx dI/dy)^2 sum(by: S(p))(dI/dy)^2 </em></p>
+ * <p><em>M = sum(by: S(p))(dI/dx)^2 sum(by: S(p))(dI/dx dI/dy)
+ * sum(by: S(p))(dI/dx dI/dy) sum(by: S(p))(dI/dy)^2 </em></p>
  *
  * <p>where the derivatives are computed using the "Sobel" operator.</p>
  *
@@ -5770,6 +5770,7 @@ public class Imgproc {
         Mat contours_mat = new Mat();
         findContours_0(image.nativeObj, contours_mat.nativeObj, hierarchy.nativeObj, mode, method, offset.x, offset.y);
         Converters.Mat_to_vector_vector_Point(contours_mat, contours);
+        contours_mat.release();
         return;
     }
 
@@ -5861,6 +5862,7 @@ public class Imgproc {
         Mat contours_mat = new Mat();
         findContours_1(image.nativeObj, contours_mat.nativeObj, hierarchy.nativeObj, mode, method);
         Converters.Mat_to_vector_vector_Point(contours_mat, contours);
+        contours_mat.release();
         return;
     }
 

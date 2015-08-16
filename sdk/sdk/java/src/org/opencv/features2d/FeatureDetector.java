@@ -217,6 +217,7 @@ public class FeatureDetector {
         Mat masks_mat = Converters.vector_Mat_to_Mat(masks);
         detect_2(nativeObj, images_mat.nativeObj, keypoints_mat.nativeObj, masks_mat.nativeObj);
         Converters.Mat_to_vector_vector_KeyPoint(keypoints_mat, keypoints);
+        keypoints_mat.release();
         return;
     }
 
@@ -235,6 +236,7 @@ public class FeatureDetector {
         Mat keypoints_mat = new Mat();
         detect_3(nativeObj, images_mat.nativeObj, keypoints_mat.nativeObj);
         Converters.Mat_to_vector_vector_KeyPoint(keypoints_mat, keypoints);
+        keypoints_mat.release();
         return;
     }
 

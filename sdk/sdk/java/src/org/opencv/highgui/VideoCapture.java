@@ -8,9 +8,9 @@ import org.opencv.core.Size;
 
 // C++: class VideoCapture
 /**
- * <p>Class for video capturing from video files or cameras.
+ * <p>Class for video capturing from video files, image sequences or cameras.
  * The class provides C++ API for capturing video from cameras or for reading
- * video files. Here is how the class can be used:</p>
+ * video files and image sequences. Here is how the class can be used:</p>
  *
  * <p>#include "opencv2/opencv.hpp" <code></p>
  *

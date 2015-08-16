@@ -12,12 +12,12 @@ import org.opencv.utils.Converters;
 public class Core {
 
     // these constants are wrapped inside functions to prevent inlining
-    private static String getVersion() { return "2.4.11.0"; }
-    private static String getNativeLibraryName() { return "opencv_java2411"; }
+    private static String getVersion() { return "2.4.12.1"; }
+    private static String getNativeLibraryName() { return "opencv_java2412"; }
     private static int getVersionEpoch() { return 2; }
     private static int getVersionMajor() { return 4; }
-    private static int getVersionMinor() { return 11; }
-    private static int getVersionRevision() { return 0; }
+    private static int getVersionMinor() { return 12; }
+    private static int getVersionRevision() { return 1; }
 
     public static final String VERSION = getVersion();
     public static final String NATIVE_LIBRARY_NAME = getNativeLibraryName();
@@ -7195,6 +7195,7 @@ public class Core {
         Mat mv_mat = new Mat();
         split_0(m.nativeObj, mv_mat.nativeObj);
         Converters.Mat_to_vector_Mat(mv_mat, mv);
+        mv_mat.release();
         return;
     }
 
